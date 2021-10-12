@@ -21,14 +21,14 @@ kubeVersionOverride: ""
 
 # Restrict Argo to only deploy into a single namespace by apply Roles and RoleBindings instead of the Cluster equivalents,
 # and start argo-cli with the --namespaced flag. Use it in clusters with strict access policy.
-singleNamespace: false
+singleNamespace: true
 
 workflow:
-  namespace: # Deprecated, for backwards compatibility: specify a single namespace to run workflows in
+  # namespace: workflows # Deprecated, for backwards compatibility: specify a single namespace to run workflows in
   serviceAccount:
-    create: false # Specifies whether a service account should be created
+    create: true # Specifies whether a service account should be created
     annotations: {}
-    name: "argo-workflow" # Service account which is used to run workflows
+    name: "argo-workflow-sanjay" # Service account which is used to run workflows
   rbac:
     # Adds Role and RoleBinding for the above specified service account to be able to run workflows
     # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
@@ -114,7 +114,7 @@ controller:
   # Specify all namespaces to run worksflows need to be able to run in. This controls where the service
   # account and RBAC resources will be created. If unspecified, will run in the default namespace.
   workflowNamespaces:
-    - default
+    - sanjay
   containerRuntimeExecutor: docker
   # containerRuntimeExecutors:
   #   - name: emissary
@@ -158,7 +158,7 @@ controller:
   extraEnv: []
 
   # Extra arguments to be added to the controller
-  extraArgs: []
+  extraArgs: ["--managed-namespace","sanjay"]
   replicas: 1
   pdb:
     enabled: false
